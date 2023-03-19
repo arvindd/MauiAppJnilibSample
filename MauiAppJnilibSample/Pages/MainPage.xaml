@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppJnilibSample.Pages.MainPage"
+             x:TypeArguments="vm:MainPageViewModel"                
+             xmlns:pages="clr-namespace:MauiAppJnilibSample.Pages"
+             xmlns:vm="clr-namespace:MauiAppJnilibSample.ViewModels"
+             xmlns:view="clr-namespace:MauiAppJnilibSample.Views">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Image
+                Source="dotnet_bot.png"
+                SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                HeightRequest="200"
+                HorizontalOptions="Center" />
+
+            <ScrollView>
+                <ListView x:Name="LstLocations" HorizontalOptions="Center">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <view:LocationViewCell/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+
+            <Button
+                x:Name="BtnStart"
+                Text="Track location"
+                SemanticProperties.Hint="Starts tracking current location"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</pages:BasePage>
