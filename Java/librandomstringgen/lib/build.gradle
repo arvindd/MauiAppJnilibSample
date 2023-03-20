@@ -25,6 +25,9 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:31.1-jre'
+
+    // Add RxJava as a dependency
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
 }
 
 jar {
