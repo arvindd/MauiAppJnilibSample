@@ -43,7 +43,6 @@ namespace MauiAppJnilibSample
 
             // Register all views with their view models
             Locator.CurrentMutable.Register(() => new MainPage(), typeof(IViewFor<MainPageViewModel>));
-            Locator.CurrentMutable.Register(() => new LocationViewCell(), typeof(IViewFor<LocationViewModel>));
 
             // Navigates to the main page, and resets the navigation stack
             Router

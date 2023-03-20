@@ -1,5 +1,5 @@
 ﻿using MauiAppJnilibSample.Services.Base;
-using MauiAppJnilibSample.Services.Mock;
+using MauiAppJnilibSample.Services.Java;
 using Splat;
 using System;
 using System.Collections.Generic;
@@ -14,12 +14,12 @@ namespace MauiAppJnilibSample
         public static void ConfigureServices()
         {
             // Register all services
-            Locator.CurrentMutable.RegisterConstant<LocationSensor>(new MockLocationSensor());
+            Locator.CurrentMutable.RegisterConstant<RandomStringService>(new JavaRandomString());
 
             // Make these services available to all other classes
-            LocationSensor = Locator.Current.GetService<LocationSensor>();
+            RandomString = Locator.Current.GetService<RandomStringService>();
         }
 
-        public static LocationSensor LocationSensor { get; private set; }
+        public static RandomStringService RandomString { get; private set; }
     }
 }

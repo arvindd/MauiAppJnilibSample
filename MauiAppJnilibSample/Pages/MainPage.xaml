@@ -20,19 +20,13 @@
                 HorizontalOptions="Center" />
 
             <ScrollView>
-                <ListView x:Name="LstLocations" HorizontalOptions="Center">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <view:LocationViewCell/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ListView x:Name="LstStrings" HorizontalOptions="Center"/>
             </ScrollView>
 
             <Button
                 x:Name="BtnStart"
-                Text="Track location"
-                SemanticProperties.Hint="Starts tracking current location"
+                Text="Generate Strings"
+                SemanticProperties.Hint="Starts to generate random strings"
                 HorizontalOptions="Center" />
 
         </VerticalStackLayout>
