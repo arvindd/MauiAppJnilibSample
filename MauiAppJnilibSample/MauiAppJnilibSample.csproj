@@ -27,6 +27,10 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android33.0|AnyCPU'" />
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android33.0|AnyCPU'" />
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -51,6 +55,10 @@
 	  <PackageReference Include="ReactiveUI.Maui" Version="16.2.6" />
 	  <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 	  <PackageReference Include="Splat.Serilog" Version="14.4.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\JavaRandomStringBinding\JavaRandomStringBinding.csproj" />
 	</ItemGroup>
 
 </Project>

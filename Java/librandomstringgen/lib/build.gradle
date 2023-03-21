@@ -33,7 +33,7 @@ dependencies {
 jar {
     archiveVersion = '0.0.1'
     archiveBaseName = 'librandomstringgen'
-    destinationDirectory = file("$buildDir/../../../lib/")
+    destinationDirectory = file("$buildDir/../../../../JavaRandomStringBinding/Jars")
 }
 
 tasks.named('test') {

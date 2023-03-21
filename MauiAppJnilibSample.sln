@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiAppSample", "MauiAppJnilibSample\MauiAppJnilibSample.csproj", "{FFE9DE22-DD9D-4DEB-A6D0-27F7EEBA3D39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiAppJnilibSample", "MauiAppJnilibSample\MauiAppJnilibSample.csproj", "{FFE9DE22-DD9D-4DEB-A6D0-27F7EEBA3D39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaRandomStringBinding", "JavaRandomStringBinding\JavaRandomStringBinding.csproj", "{BB7AFC35-3D87-4DB3-AB9B-2ED443AEE51D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{FFE9DE22-DD9D-4DEB-A6D0-27F7EEBA3D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFE9DE22-DD9D-4DEB-A6D0-27F7EEBA3D39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FFE9DE22-DD9D-4DEB-A6D0-27F7EEBA3D39}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BB7AFC35-3D87-4DB3-AB9B-2ED443AEE51D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7AFC35-3D87-4DB3-AB9B-2ED443AEE51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7AFC35-3D87-4DB3-AB9B-2ED443AEE51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7AFC35-3D87-4DB3-AB9B-2ED443AEE51D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
