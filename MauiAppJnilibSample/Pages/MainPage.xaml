@@ -24,10 +24,23 @@
             </ScrollView>
 
             <Button
-                x:Name="BtnStart"
+                x:Name="BtnGenerate"
                 Text="Generate Strings"
                 SemanticProperties.Hint="Starts to generate random strings"
                 HorizontalOptions="Center" />
+
+            <HorizontalStackLayout 
+                Spacing="20"
+                HorizontalOptions="Center">
+                
+                <Button x:Name="BtnStreamStart"
+                 Text="Start String Stream"
+                 SemanticProperties.Hint="Starts to stream random strings"/>
+
+                <Button x:Name="BtnStreamStop"
+                 Text="Stop String Stream"
+                 SemanticProperties.Hint="Stops to stream"/>
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

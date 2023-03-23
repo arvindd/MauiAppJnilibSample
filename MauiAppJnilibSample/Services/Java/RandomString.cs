@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using MauiAppJnilibSample.Platforms.Android.Services;
 using MauiAppJnilibSample.Services.Base;
 using ReactiveUI;
 using System;
@@ -7,16 +8,15 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MauiAppJnilibSample.Platforms.Android.Services;
+using JavaRandomString = MauiAppJnilibSample.Platforms.Android.Services.RandomString;
 
 namespace MauiAppJnilibSample.Services.Java
 {
-    internal class JavaRandomString : RandomStringService
+    internal class RandomString : RandomStringService
     {
         private readonly Random random = new();
-        private readonly RandomString str = new();
-
-        public override IObservable<IChangeSet<string>> Connect()
+        private readonly JavaRandomString str = new();
+        public override IObservable<IChangeSet<string>> GenerateStrings()
         {
             return Observable.Generate(0,
                      x => x < 3,

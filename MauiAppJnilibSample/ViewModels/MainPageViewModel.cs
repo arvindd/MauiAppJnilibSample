@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using MauiAppJnilibSample.Services.Base;
+using MauiAppJnilibSample.Services.Java;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -19,8 +20,19 @@ public class MainPageViewModel : BaseViewModel
 {
     public MainPageViewModel() : base("Home") 
     {
-        RandomString = AppConfig.RandomString;
-        StartReadingCommand = ReactiveCommand.CreateFromObservable(RandomString.Connect);
+        // Get all services from the configuration
+        RandomStringService = AppConfig.RandomString;
+        StringSequenceGeneratorService = AppConfig.StringSequenceGenerator;
+
+        // Now, connect all commands to their respective functions in the services
+        GenerateStringsCommand = ReactiveCommand.CreateFromObservable(RandomStringService.GenerateStrings);
+        StartStreamCommand = ReactiveCommand.Create(StringSequenceGeneratorService.StartStreamingStrings);
+        StopStreamCommand = ReactiveCommand.Create(StringSequenceGeneratorService.StopStreaming);
+
+        // Prepare the string listener to start listening for stream of strings when the "start-stream"
+        // button is clicked
+        //StringSequenceListener listener = new(_stringList);
+        //AppConfig.StringSequenceGenerator.SetStringSequenceListener(listener);
 
         // Note the SubscribeOn() and ObserveOn() used here:
         // SubscribeOn() makes the whole of the execution to run in a specific thread (so that the actual Subscribe()
@@ -28,20 +40,26 @@ public class MainPageViewModel : BaseViewModel
         // ObserveOn() makes the lines after ObserveOn() execute on a specific thread.
         //
         // Since we want to service to work independent of the GUI (main) thread, we subscribe on a TaskpoolScheduler
-        // first, so that the StartReadingCommand (which in-turn is reading from the java library) happens on that thread. 
+        // first, so that the GenerateStringsCommand (which in-turn is reading from the java library) happens on that thread. 
         // The first two SubscribeOn() and ObserveOn() below achieves these objectives.
         // The _stringList has to be updated on the GUI (main) thread because we want the generated string to be
         // displayed on the GUI. The last ObserveOn() is for that.
-        StartReadingCommand                             // <-- Running on a TaskpoolScheduler
+        GenerateStringsCommand                          // <-- Running on a TaskpoolScheduler
             .SubscribeOn(RxApp.TaskpoolScheduler)       // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.TaskpoolScheduler)         // <-- Running on a TaskpoolScheduler 
             .DisposeMany()                              // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.MainThreadScheduler)       // <-- Running on a TaskpoolScheduler
-            .Bind(out _stringList)                    // <-- Running on the main (GUI) thread
+            .Bind(out _stringList)                      // <-- Running on the main (GUI) thread
             .Subscribe();                               // <-- Running on the main (GUI) thread
-
-        // Catch any exceptions thrown by the command above and display a log message
-        StartReadingCommand
+        
+        // Catch any exceptions thrown by the commands above and display a log message
+        GenerateStringsCommand
+            .ThrownExceptions
+            .Subscribe(x => this.Log().Warn($"Exception thrown: {x.Message}"));
+        StartStreamCommand
+            .ThrownExceptions
+            .Subscribe(x => this.Log().Warn($"Exception thrown: {x.Message}"));
+        StopStreamCommand
             .ThrownExceptions
             .Subscribe(x => this.Log().Warn($"Exception thrown: {x.Message}"));
     }
@@ -49,7 +67,10 @@ public class MainPageViewModel : BaseViewModel
     private readonly ReadOnlyObservableCollection<string> _stringList;
     public ReadOnlyObservableCollection<string> StringList => _stringList;
 
-    private RandomStringService RandomString { get; }
+    private RandomStringService RandomStringService { get; }
+    private StringSequenceGeneratorService StringSequenceGeneratorService { get; }
 
-    public ReactiveCommand<Unit, IChangeSet<string>> StartReadingCommand { get; }
+    public ReactiveCommand<Unit, IChangeSet<string>> GenerateStringsCommand { get; }
+    public ReactiveCommand<Unit, Unit> StartStreamCommand { get; }
+    public ReactiveCommand<Unit, Unit> StopStreamCommand { get; }
 }

@@ -14,12 +14,15 @@ namespace MauiAppJnilibSample
         public static void ConfigureServices()
         {
             // Register all services
-            Locator.CurrentMutable.RegisterConstant<RandomStringService>(new JavaRandomString());
+            Locator.CurrentMutable.RegisterConstant<RandomStringService>(new RandomString());
+            Locator.CurrentMutable.RegisterConstant<StringSequenceGeneratorService>(new StringSequenceGenerator());
 
             // Make these services available to all other classes
             RandomString = Locator.Current.GetService<RandomStringService>();
+            StringSequenceGenerator = Locator.Current.GetService<StringSequenceGeneratorService>();
         }
 
         public static RandomStringService RandomString { get; private set; }
+        public static StringSequenceGeneratorService StringSequenceGenerator { get; private set; }
     }
 }

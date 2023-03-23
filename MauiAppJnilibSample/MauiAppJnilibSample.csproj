@@ -55,6 +55,7 @@
 	  <PackageReference Include="ReactiveUI.Maui" Version="16.2.6" />
 	  <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 	  <PackageReference Include="Splat.Serilog" Version="14.4.1" />
+	  <PackageReference Include="Xamarin.Android.ReactiveX.RxJava3.RxJava" Version="3.1.6" />
 	</ItemGroup>
 
 	<ItemGroup>

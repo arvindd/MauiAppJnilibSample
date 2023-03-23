@@ -14,14 +14,16 @@ import java.util.concurrent.TimeUnit;
  * and for generating sequences.
  */
 public class StringSequenceGenerator {
-    private final StringSequenceListener listener;
+    private StringSequenceListener listener;
     private final Observable generator;
     private Disposable disposable;
     
-    public StringSequenceGenerator(StringSequenceListener listener) {
-        this.listener = listener;
-        
+    public StringSequenceGenerator() {
         generator = Observable.interval(new Random().nextInt(2), TimeUnit.SECONDS);
+    }
+    
+    public void setStringSequenceListener(StringSequenceListener listener) {
+        this.listener = listener;                
     }
     
     /**

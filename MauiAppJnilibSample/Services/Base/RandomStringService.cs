@@ -10,9 +10,9 @@ namespace MauiAppJnilibSample.Services.Base
     internal abstract class RandomStringService : BaseService
     {
         /// <summary>
-        /// Connects to the randome string service, and streams random strings as Observables of ChangeSets.
+        /// Connects to the random string service, and streams random strings as Observables of ChangeSets.
         /// </summary>
         /// <returns></returns>
-        public abstract IObservable<IChangeSet<string>> Connect();
+        public abstract IObservable<IChangeSet<string>> GenerateStrings();
     }
 }
