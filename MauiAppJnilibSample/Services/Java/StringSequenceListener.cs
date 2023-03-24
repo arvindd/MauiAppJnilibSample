@@ -11,15 +11,21 @@ namespace MauiAppJnilibSample.Services.Java
 {
     internal class StringSequenceListener : IStringSequenceListener
     {
-        public StringSequenceListener(ReadOnlyObservableCollection<string> list)
+        public StringSequenceListener(out SourceList<string> strlist)
         {
-            _strlist = list;
+            strings = strlist = new SourceList<string>();
         }
         public override void OnString(string str)
         {
-            _strlist.Append(str);
+            // We'll limit only 3 strings on the UI
+            if (strings.Count == 3)
+            {
+                strings.Clear();
+            }
+
+            strings.Add(str);
         }
 
-        private readonly ReadOnlyObservableCollection<string> _strlist;
+        private readonly SourceList<string> strings;
     }
 }

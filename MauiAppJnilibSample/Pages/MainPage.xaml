@@ -26,20 +26,20 @@
             <Button
                 x:Name="BtnGenerate"
                 Text="Generate Strings"
-                SemanticProperties.Hint="Starts to generate random strings"
+                SemanticProperties.Hint="Starts generating random strings"
                 HorizontalOptions="Center" />
 
             <HorizontalStackLayout 
                 Spacing="20"
                 HorizontalOptions="Center">
-                
+
                 <Button x:Name="BtnStreamStart"
                  Text="Start String Stream"
-                 SemanticProperties.Hint="Starts to stream random strings"/>
+                 SemanticProperties.Hint="Starts streaming random strings"/>
 
                 <Button x:Name="BtnStreamStop"
                  Text="Stop String Stream"
-                 SemanticProperties.Hint="Stops to stream"/>
+                 SemanticProperties.Hint="Stops streaming strings"/>
             </HorizontalStackLayout>
 
         </VerticalStackLayout>

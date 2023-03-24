@@ -27,10 +27,10 @@ public partial class MainPage : BasePage<MainPageViewModel>
                 .DisposeWith(disposable);
 
             this.WhenAnyValue(
-				vm => vm.ViewModel.GenerateStringsCommand,
+                vm => vm.ViewModel.GenerateStringsCommand,
                 vm => vm.ViewModel.StartStreamCommand,
                 vm => vm.ViewModel.StopStreamCommand)
-				.Subscribe();
+                .Subscribe();
         });
 	}
 }

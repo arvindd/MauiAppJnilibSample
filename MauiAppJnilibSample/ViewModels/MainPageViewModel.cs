@@ -26,13 +26,8 @@ public class MainPageViewModel : BaseViewModel
 
         // Now, connect all commands to their respective functions in the services
         GenerateStringsCommand = ReactiveCommand.CreateFromObservable(RandomStringService.GenerateStrings);
-        StartStreamCommand = ReactiveCommand.Create(StringSequenceGeneratorService.StartStreamingStrings);
+        StartStreamCommand = ReactiveCommand.CreateFromObservable(StringSequenceGeneratorService.StartStreamingStrings);
         StopStreamCommand = ReactiveCommand.Create(StringSequenceGeneratorService.StopStreaming);
-
-        // Prepare the string listener to start listening for stream of strings when the "start-stream"
-        // button is clicked
-        //StringSequenceListener listener = new(_stringList);
-        //AppConfig.StringSequenceGenerator.SetStringSequenceListener(listener);
 
         // Note the SubscribeOn() and ObserveOn() used here:
         // SubscribeOn() makes the whole of the execution to run in a specific thread (so that the actual Subscribe()
@@ -44,14 +39,23 @@ public class MainPageViewModel : BaseViewModel
         // The first two SubscribeOn() and ObserveOn() below achieves these objectives.
         // The _stringList has to be updated on the GUI (main) thread because we want the generated string to be
         // displayed on the GUI. The last ObserveOn() is for that.
-        GenerateStringsCommand                          // <-- Running on a TaskpoolScheduler
+        StartStreamCommand                              // <-- Running on a TaskpoolScheduler
             .SubscribeOn(RxApp.TaskpoolScheduler)       // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.TaskpoolScheduler)         // <-- Running on a TaskpoolScheduler 
             .DisposeMany()                              // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.MainThreadScheduler)       // <-- Running on a TaskpoolScheduler
             .Bind(out _stringList)                      // <-- Running on the main (GUI) thread
             .Subscribe();                               // <-- Running on the main (GUI) thread
-        
+
+        //GenerateStringsCommand                          // <-- Running on a TaskpoolScheduler
+        //    .SubscribeOn(RxApp.TaskpoolScheduler)       // <-- Running on a TaskpoolScheduler
+        //    .ObserveOn(RxApp.TaskpoolScheduler)         // <-- Running on a TaskpoolScheduler 
+        //    .DisposeMany()                              // <-- Running on a TaskpoolScheduler
+        //    .ObserveOn(RxApp.MainThreadScheduler)       // <-- Running on a TaskpoolScheduler
+        //    .Bind(out _stringList)                      // <-- Running on the main (GUI) thread
+        //    .Subscribe();                               // <-- Running on the main (GUI) thread
+
+
         // Catch any exceptions thrown by the commands above and display a log message
         GenerateStringsCommand
             .ThrownExceptions
@@ -71,6 +75,6 @@ public class MainPageViewModel : BaseViewModel
     private StringSequenceGeneratorService StringSequenceGeneratorService { get; }
 
     public ReactiveCommand<Unit, IChangeSet<string>> GenerateStringsCommand { get; }
-    public ReactiveCommand<Unit, Unit> StartStreamCommand { get; }
+    public ReactiveCommand<Unit, IChangeSet<string>> StartStreamCommand { get; }
     public ReactiveCommand<Unit, Unit> StopStreamCommand { get; }
 }

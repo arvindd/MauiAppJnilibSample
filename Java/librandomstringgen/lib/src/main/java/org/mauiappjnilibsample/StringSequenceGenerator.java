@@ -17,9 +17,17 @@ public class StringSequenceGenerator {
     private StringSequenceListener listener;
     private final Observable generator;
     private Disposable disposable;
+    private RandomString rndstr;
     
+    /**
+     * Generate 3 random strings with 1 second interval.
+     */
     public StringSequenceGenerator() {
-        generator = Observable.interval(new Random().nextInt(2), TimeUnit.SECONDS);
+        generator = 
+                Observable
+                .interval(new Random().nextInt(2), TimeUnit.SECONDS);
+        
+        rndstr = new RandomString();
     }
     
     public void setStringSequenceListener(StringSequenceListener listener) {
@@ -30,7 +38,7 @@ public class StringSequenceGenerator {
      * Start generating string sequences
      */
     public void start() {
-        disposable = generator.subscribe(x -> listener.onString("hello"));
+        disposable = generator.subscribe(x -> listener.onString("Seq-" + rndstr.generate()));
     }
     
     /**

@@ -10,6 +10,6 @@ import java.util.UUID;
  */
 public class RandomString {
     public String generate() {
-        return "FromJava:" + UUID.randomUUID().toString().substring(0, 10);
+        return "FromJava: " + UUID.randomUUID().toString().substring(0, 10);
     }
 }
