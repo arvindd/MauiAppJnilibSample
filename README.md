@@ -1,12 +1,27 @@
 # Introduction
-This repository contains a starting point for all your MAUI applications. 
+This sample is based on another sample for [MAUI Application](https://github.com/arvindd/MauiAppSample). The Location service in that application is now replaced with a "Random String Service" - which is provided by a java library. 
 
-The best way to use this is to open the solution in your visual studio, and export the project MauiAppSample as a "Visual Studio Template" (Project -> Export Template) after selecting the project.
+The whole point of this sample is to demonstrate use of a java library by creating a Java binding library in MAUI. The sample shows two aspects:
+
+- C# code in MAUI invoking a java library function (i.e., synchornous java function call)
+- Java function calling a C# function by use of a callback mechanism from Java library. This also means that we use C# code registers a function as a callback function with the Java code.
+
+Use of the first one above is for normal usage of C# calling Java. The usecase for the second one is typically where Android sensors (internal or custom devices attached to mobiles via USB, etc.) stream data. The case is when such data streamers have java-based APIs provided by the device-vendors, MAUI/Xamarin C# code wraps that API for use. 
+
+The code for the java project that generates the jar lib is also within this repository in the [Java](Java) folder. This project build with Gradle. You can use gradle directly from commandline to build this or use your favourite java IDE to build. The final jar that is built from this project gets directly into the Android Java Binding project JavaRandomStringBinding's [Jars](JavaRandomStringBinding/Jars) folder.
+
+Note: The java project for generating the jar library is not needed for your purposes. What you need is only the final jar that it produces after the build.
 
 # What does this sample do?
-Well, the sample application is really very simple - it just shows up a button, which when clicked, throws up some numbers on a ListView that is just above the button. Everytime the button is clicked, some numbers are added to this ListView.
+The sample application shows up like this:
 
-This button is simply labelled "Track Location" and the numbers that show up on the ListView are the latitude and longitude values of a location.
+![Screenshot](img/screenshot.png)
+
+There are three buttons:
+
+- The first "Generate Strings" button invokes the backend Java function that generates a random string. This function is called 3 times to fill up a listview with 3 random strings. This is to demonstrate the normal use-case where C# calls Java code.
+- The second button "Start string stream" registers a callback with Java code, and calls a Java function to now start a random-string stream. The random strings that are generated from the Java code fill up the ListView. This demonstrates callback from Java to C# code.
+- The third button "Stop String Stream" calls a java function that stops the string stream
 
 # Who can use this sample?
 Everyone who develops mobile applications use [MAUI](https://dotnet.microsoft.com/en-us/apps/maui)
@@ -15,157 +30,35 @@ Everyone who develops mobile applications use [MAUI](https://dotnet.microsoft.co
 
 Uses [Reactive Extensions](https://www.reactiveui.net/) (with all it's niceties such as Observables, Dynamic Data, etc.).
 
+**AND**
+
+Uses JNI for using a Java backend service API
+
 If either of these are **NOT** a target of your application's design, this sample is **NOT** for you.
 
-The sample is heavily influenced by a superb sample in the ReactiveUI - [Cinephile](https://github.com/reactiveui/ReactiveUI.Samples/tree/main/Xamarin/Cinephile). Cinephile is done for Xamarin, while this sample is for MAUI.
-
 # How to...
-## ...Add a new page?
-
-- Add both the XAML and the code-behind in the [Pages](MauiAppSample/Pages) folder. Make sure to derive your Page from [BasePage](MauiAppSample/Pages/BasePage.cs).
-- Add a ViewModel for this page in the [ViewModels](MauiAppSample/ViewModels) folder, with properties and commands that you want to bind to in the page above. The ViewModel must be derived from [BaseViewModel](MauiAppSample/ViewModels/BaseViewModel.cs).
-- Register the ViewModel for the Page in [AppBootstrapper.cs](MauiAppSample/AppBootstrapper.cs)
-- Add code in the code-behind of your page to do the binding (see below) of properties and commands to the ViewModel
-
-## ...Add a new custom-control or a ViewCell?
-
-Follow the same steps as above, except:
-
-- All views and their code-behinds should be in the [Views](MauiAppSample/Views) folder
-- All views must be derived from either [BaseView](MauiAppSample/Views/BaseView.cs) (if top-level UI control) or [BaseViewCell](MauiAppSample/Views/BaseViewCell.cs) (if the view is for a single cell in the ListView, Table, etc.)
-
-Other steps (registration of views and their view models, binding, etc.) follows the same steps as for Pages.
-
-## ...Add a service?
-
-- Add any data models your service will consume / generate in the [Models](MauiAppSample/Models) folder
-- Create a base-service (as an abstract class or an interface) for the service in [Services/Base](MauiAppSample/Services/Base). Make sure to derive this from [BaseService](MauiAppSample/Services/BaseService.cs)
-- Add a "mock" for the service so that you can test your service in [Services/Mock](MauiAppSample/Services/Mock). Make sure to derive this mock service from your own base-service interface / abstract class created above.
-- Add the real implementation of the service directly in the [Services](MauiAppSample/Services) folder. Make sure to also derive this real service from your base service abstract class / interface created above
-- Register your service in [AppConfig.cs](MauiAppSample/AppConfig.cs):
+## ...Add a new java service?
+- Create a new "Android Java Binding Library" and add it to your main solution. Inside the project, create a "Jars" folder if it is not already present. Add your Java jar file into this folder. Building of this project will automatically create C# code that wraps this jar API - the generated code will be seen in the obj/-Debug/Release-/-platform-/generated folder.
+- In your main project (which is MauiAppJnilibSample project in our sample), inside [Platforms/Android/Services](MauiAppJnilibSample/Platforms/Android/Services), add a C# class that will be creating objects of classes that are defined in the Jar (and calling methods of those Java-classes). If your java library is used also for data streaming (i.e., you want to support callbacks from Java, you will need to also need to make your class as an implementation of the Java interface that declares callback functions.Basically, the classes you add here are those that are mainly going to interact with Java. Make sure that your main project has the above Android Java Binding project as a dependency.
+- Create a base-service (as an abstract class or an interface) for the service in [Services/Base](MauiAppJnilibSample/Services/Base). Make sure to derive this from [BaseService](MauiAppJnilibSample/Services/BaseService.cs)
+- Add any data models your service will consume / generate in the [Models](MauiAppJnilibSample/Models) folder
+- Add the real implementation of the service directly in the [Services](MauiAppJnilibSample/Services) folder. Make sure to also derive this real service from your base service abstract class / interface created above. Name this class with the same name as your class in the [Platform/Android/Services](MauiAppJnilibSample/Platform/Android/Services) folder above.
+  - This class must create an instance of the Platform service. For any Java functions that this class must use, it can now use those functions via the platform instance.
+- Register your service in [AppConfig.cs](MauiAppJnilibSample/AppConfig.cs):
   - Use `RegisterConstant()` (in Splat) for registering your service (mock or real) as a singleton
   - Create a property to hold a global instance of your service
   - Assign your service instance to the above property using `GetService()` (in Splat)
 
-
 # Architecture of the sample
-The sample has a simple MVVM architecture as shown below. All the Views are coded in GREEN, ViewModels in LIGHT BLUE, and Models in BROWN. We additionally have "Services" that are coded in ORANGE. 
+The sample has the same architecture as described in the [MauiAppSample](https://github.com/arvindd/MauiAppSample). Therefore, to understand the architecture in details, read through the specifics in that sample's page.
 
-![](img/arch.svg)
+The only thing that changes is the part where services are added - these Java-services interact with C# services like this:
 
-## Application bootstrapping
-
-When the application [starts](MauiAppSample/App.xaml.cs), it [bootstraps](MauiAppSample/AppBootstrapper.cs) and then creates the [MainPage](MauiAppSample/Pages/MainPage.xaml).
-
-Before creating the `MainPage`, it:
-
-- Configures all services (i.e., registers a concrete implementation of a service with a service interface - using the [Splat](https://github.com/reactiveui/splat) dependency-injection framework)
-- Registers ViewModels for all Views in the application (connecting pages to their view models and other custom-ui controls with their view models)
-
-## Application Pages
-
-The `MainPage` (and all other pages that are added to this application) derives from the [BasePage](MauiAppSample/Pages/BasePage.cs) so as to have a consistent feature access (such as logging, ViewModel associations, etc.) across all pages. As with any XAML application, `MainPage` comes with both [XAML](MauiAppSample/Pages/MainPage.xaml) and a [code-behind](MauiAppSample/Pages/MainPage.xaml.cs).Both the XAML and its code-behind form a part of the "View" in the MVVM pattern. For ease of discovery, all pages (although are also views) are placed under a dedicated folder [Pages](MauiAppSample/Pages).
-
-## View Models
-
-Each page has a corresponding ViewModel with a naming scheme `<PageName>ViewModel.cs`. All ViewModels are placed in the folder [ViewModel](MauiAppSample/ViewModels).The ViewModel corresponding to `MainPage` is [MainPageViewModel](MauiAppSample/ViewModels/MainPageViewModel.cs).
-
-Similarly, a page may contain additional UI custom controls - just for keeping the [Pages](MauiAppSample/Pages) folder uncluttered, these are all added in the [Views](MauiAppSample/Views) folder. This `Views` folder too contains the custom-control's XAML file and its code-behind.
-
-## View <-> ViewModel binding
-
-The UI controls in the pages are bound to properties in the ViewModels, and this binding is done in the pages' code-behind. For custom-controls, this binding happens in the controls' code-behind file.
-
-This binding uses simple Reactive Extension pattern. For example, the `MainPage` has this in the code-behind:
-
-```
-...
-this.WhenActivated(disposable =>
-{
-  this.OneWayBind(ViewModel, vm => vm.LocationList, v => v.LstLocations.ItemsSource)
-    .DisposeWith(disposable);
-
-  this.BindCommand(ViewModel, vm => vm.StartReadingCommand, v => v.BtnStart)
-    .DisposeWith(disposable);
-
-  this.WhenAnyValue(vm => vm.ViewModel.StartReadingCommand)
-    .Subscribe();
-});
-...
-```
-What you see is that specific properties in the ViewModel are bound to specific UI properties in the View using the Reactive Extensions `WhenActiviated`, `WhenAnyValue`, `OneWayBind`, and `BindCommand`. For editable UI controls, `Bind` can be used for two-way binds. 
-
-While `OneWayBind` and `Bind` are for binding with properties, `BindCommand` is for binding UI control-actions to services that perform that action. You can see above that a button in the view is bound to an action to start reading from a sensor. So: 
-
-***Views are bound to ViewModels using the Reactive Extensions in the View's code-behind.***
+![img/arch.drawio.svg]()
 
 ## Services and data Model
 
-Services are those that generate data for (or consumes data from) ViewModels. This data that services generate or consume form the "Model" of MVVM.
-
-There are various forms of services - those that perform a specific duty (for example, fetch weather information from a remote weather service - in this case the data Model that this service generates is the weather data), controls a car sensor (in this case, the service consumes control information from the ViewModel and uses that data to control a car-sensor).
-
-In our case, the [MainPageViewModel](MauiAppSample/ViewModels/MainPageViewModel.cs) uses the [LocationSensor](MauiAppSample/Services/Base/LocationSensor.cs) service that generates [Location](MauiAppSample/Models/Location.cs) data (Model).
-
-# Data Streams
-
-The data generated from (or consumed by) the services are in the form of `IObservable<IChangeSet<T>>`, where `T` is the type of data Model generated (in our case, this `T` is `Location`).
-
-When services generate `IObservable`, it is easy to respond to data on the UI because the ViewModel can simply `Subscribe` to this `Observable` and since ViewModels are also bound to the Views, the data generated by the services is simply reflected on the Views without any more intermediate code in the ViewModel.
-
-Also, an `IObservable<IChangeSet<T>>` makes this even more interesting, as we now have all the [Dynamic Data](https://www.reactiveui.net/docs/handbook/collections/) operators at our disposal.
-
-All operators of the Reactive Extensions [can be seen here](https://reactivex.io/documentation/operators.html). These operators help in transforming data, replacing data and many other interesting data operations easy.
-
-# Concurrency 
-
-To understand threading and concurrency issues that can crop up, go back to how Views, ViewModels and the Services that generate the Models work.
-
-ViewModels basically are a link between Views and the Services that they offer to the Views. Typically, these services are either CPU-bound services (eg: calculations, data-crunching) or IO-bound (eg: reading sensor values, data transfers on network, etc.) This makes ViewModel's job tricky:
-
-- One once side, Views need to respond to user-interactions almost real-time: when a UI control initiates an action to be performed by a service, it should not keep the application hanging until that action is complete (this will make the application unresponsive when a long-running service action is initiated)
-- On the other side, Services typically access external systems (database systems, network systems or hardware) which may take time to respond to the service
-
-So, basically, ViewModel will have to run different parts of the data stream at different speeds. Thankfully, Reactive Extensions come with a solution to exactly this problem: it makes use of schedulers.
-
-ViewModels use this pattern for handling this (see this code in MainPageViewModel):
-
-```
-StartReadingCommand                           // <-- Running on a TaskpoolScheduler
-  .SubscribeOn(RxApp.TaskpoolScheduler)       // <-- Running on a TaskpoolScheduler
-  .ObserveOn(RxApp.TaskpoolScheduler)         // <-- Running on a TaskpoolScheduler 
-  .Transform(x => new LocationViewModel(x))   // <-- Running on a TaskpoolScheduler
-  .DisposeMany()                              // <-- Running on a TaskpoolScheduler
-  .ObserveOn(RxApp.MainThreadScheduler)       // <-- Running on a TaskpoolScheduler
-  .Bind(out _locationList)                    // <-- Running on the main (GUI) thread
-  .Subscribe();                               // <-- Running on the main (GUI) thread
-```
-
-As you can see above, once the UI has initiated an action to read, the command kick-starts a service action that responds with an `IObservable<IChangeSet<T>>`. The actions run by ViewModel on the service (i.e., the action that `StartReadingCommand` initiates in the service `LocationSensor`) does not run in the main thread (which runs the GUI) - it runs from one of the threads in the thread-pool, so that the UI thread (main thread) is free to respond to any user-actions.
-
-Howevever, once the data is generated by the service-thread, that data needs to be updated (i.e., bound to) a UI-element - and hence we use `.ObserveOn(RxApp.MainThreadScheduler)` to switch the context to the main-thread for data updation.
-
-# Folders and files
-
-The sample has the following folders and files (apart from the usual Visual Studio files):
-
-Folder/File | Contents
------------ | ---------
-[App.xaml](MauiAppSample/App.xaml) | Application front-end
-[App.xaml.cs](MauiAppSample/App.xaml.cs) | Application front-end code-behind, our starting point
-[AppBootstrapper.cs](MauiAppSample/AppBootstrapper.cs) | Bootstrapping code that initialises the logging system, and registers various services using the `AppConfig` (below). It also connects ViewModels a Views (registers an `IViewFor`)
-[AppConfig.cs](MauiAppSample/AppConfig.cs) | Application configuration. It also "injects" a concrete implementation for services.
-[Pages](MauiAppSample/Pages) | Folder that contains both the XAML and code-behind of all the application pages. All pages derive from the `BasePage` (below).
-[Pages/BasePage.cs](MauiAppSample/Pages/BasePage.cs) | Base class for all application pages, that forces a template for using the logging system in all pages, and also connecting a page with its ViewModel
-[Views](MauiAppSample/Views) | Folder containing custom-control's XAML and their code-behind.
-[Views/BaseView.cs](MauiAppSample/Views/BaseView.cs) | All custom-control views derive from this, similar to the `BasePage`.
-[Views/BaseViewCell.cs](MauiAppSample/Views/BaseViewCell.cs) | All ViewCells (eg: data template items inside a `ListView`, etc.) derive from this
-[ViewModels](MauiAppSample/ViewModels) | Folder containing all the ViewModels of the Views and Pages. 
-[ViewModels/BaseViewModel.cs](MauiAppSample/ViewModels/BaseViewModel.cs) | All ViewModels derive from this class
-[Services](MauiAppSample/Services) | Folder containing all services. 
-[Services/Mock](MauiAppSample/Services/Mock) | Since services can be complex, they also need an ability to "mock" by generating fake data during the development time. All such "mock" services go here.
-[Services/Base](MauiAppSample/Services/Base) | All base-classes of individual services go here. Both the real service and the mock services derive from the base-service defined here.
-[Services/BaseService.cs](MauiAppSample/Services/BaseService.cs) | All base-services (in the [Services/Base](MauiAppSample/Services/Base) folder) derive from this class. This enables logging for all services.
+Services are those that generate data for (or consumes data from) ViewModels. This data that services generate or consume form the "Model" of MVVM. Since the real services are implemenented in Java, the models are also created in Java code.
 
 # Contact
 If you liked this sample, or want to feedback, [contact me on twitter](https://twitter.com/arvindd).

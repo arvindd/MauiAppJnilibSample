@@ -19,7 +19,7 @@
                 HeightRequest="200"
                 HorizontalOptions="Center" />
 
-            <ScrollView>
+            <ScrollView HeightRequest="200">
                 <ListView x:Name="LstStrings" HorizontalOptions="Center"/>
             </ScrollView>
 

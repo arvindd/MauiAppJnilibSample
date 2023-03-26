@@ -55,7 +55,6 @@ public class MainPageViewModel : BaseViewModel
         //    .Bind(out _stringList)                      // <-- Running on the main (GUI) thread
         //    .Subscribe();                               // <-- Running on the main (GUI) thread
 
-
         // Catch any exceptions thrown by the commands above and display a log message
         GenerateStringsCommand
             .ThrownExceptions

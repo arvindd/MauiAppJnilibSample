@@ -42,6 +42,7 @@ namespace MauiAppJnilibSample.Services.Java
         public override void StopStreaming()
         {
             Generator.Stop();
+            strings.Dispose();
         }
 
         private SourceList<string> strings;

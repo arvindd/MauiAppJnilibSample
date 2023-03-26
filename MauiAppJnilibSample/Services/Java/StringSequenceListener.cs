@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using MauiAppJnilibSample.Platforms.Android.Services;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,12 +18,6 @@ namespace MauiAppJnilibSample.Services.Java
         }
         public override void OnString(string str)
         {
-            // We'll limit only 3 strings on the UI
-            if (strings.Count == 3)
-            {
-                strings.Clear();
-            }
-
             strings.Add(str);
         }
 
