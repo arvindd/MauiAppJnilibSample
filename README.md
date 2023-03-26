@@ -1,3 +1,5 @@
+### NOTE: As of the last commit of this sample, Visual Studio's intellisense does not recognise symbols in the Android Java Binding project. Although VS shows errors in symbols referred from Android Java Binding project, the build does not fail. Will update this note once we have a solution for this / VS fixes the problem.
+
 # Introduction
 This sample is based on another sample for [MAUI Application](https://github.com/arvindd/MauiAppSample). The Location service in that application is now replaced with a "Random String Service" - which is provided by a java library. 
 
