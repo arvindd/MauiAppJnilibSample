@@ -44,6 +44,7 @@ If either of these are **NOT** a target of your application's design, this sampl
 - Add any data models your service will consume / generate in the [Models](MauiAppJnilibSample/Models) folder
 - Add the real implementation of the service directly in the [Services](MauiAppJnilibSample/Services) folder. Make sure to also derive this real service from your base service abstract class / interface created above. Name this class with the same name as your class in the [Platform/Android/Services](MauiAppJnilibSample/Platform/Android/Services) folder above.
   - This class must create an instance of the Platform service. For any Java functions that this class must use, it can now use those functions via the platform instance.
+- **If your java project uses an external dependency (in this sample, we depend on io.reactivex.rxjava3):** Search for a Nuget package in your C# project with the same name. Most of the external dependencies have their Xamarin/MAUI binding - see [AndroidX project](https://github.com/xamarin/AndroidX))  
 - Register your service in [AppConfig.cs](MauiAppJnilibSample/AppConfig.cs):
   - Use `RegisterConstant()` (in Splat) for registering your service (mock or real) as a singleton
   - Create a property to hold a global instance of your service
