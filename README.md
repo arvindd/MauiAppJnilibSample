@@ -54,7 +54,7 @@ The sample has the same architecture as described in the [MauiAppSample](https:/
 
 The only thing that changes is the part where services are added - these Java-services interact with C# services like this:
 
-![img/arch.drawio.svg]()
+![](img/arch.drawio.svg)
 
 ## Services and data Model
 
