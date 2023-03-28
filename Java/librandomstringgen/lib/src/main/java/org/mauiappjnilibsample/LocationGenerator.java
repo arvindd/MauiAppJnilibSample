@@ -10,39 +10,42 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class is specifically for registering string sequence listeners
- * and for generating sequences.
+ * This class is specifically for registering location listeners
+ * and for generating random locations.
  */
-public class StringSequenceGenerator {
-    private StringSequenceListener listener;
+public class LocationGenerator {
+    private LocationListener listener;
     private final Observable generator;
     private Disposable disposable;
-    private RandomString rndstr;
+    private final RandomData rand;
     
     /**
-     * Generate 3 random strings with 1 second interval.
+     * Generate random locations with 1 second interval until stopped.
      */
-    public StringSequenceGenerator() {
+    public LocationGenerator() {
         generator = 
                 Observable
                 .interval(new Random().nextInt(2), TimeUnit.SECONDS);
         
-        rndstr = new RandomString();
+        rand = new RandomData();
     }
     
-    public void setStringSequenceListener(StringSequenceListener listener) {
+    public void setLocationListener(LocationListener listener) {
         this.listener = listener;                
     }
     
     /**
-     * Start generating string sequences
+     * Start generating random locations
      */
     public void start() {
-        disposable = generator.subscribe(x -> listener.onString("Seq-" + rndstr.generate()));
+        disposable = generator.subscribe(x -> {
+            Location loc = new Location(rand.getRandomFloat(), rand.getRandomFloat());
+            listener.onLocation(loc);
+        });
     }
     
     /**
-     * Stop generating string sequences
+     * Stop generating locations
      */
     public void stop() {
         disposable.dispose();

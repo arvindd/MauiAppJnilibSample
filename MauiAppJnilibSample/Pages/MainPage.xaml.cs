@@ -1,6 +1,7 @@
 ﻿using MauiAppJnilibSample.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Maui;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
@@ -12,9 +13,10 @@ public partial class MainPage : BasePage<MainPageViewModel>
 	{
 		InitializeComponent();
 
-		this.WhenActivated(disposable =>
+
+        this.WhenActivated(disposable =>
 		{
-			this.OneWayBind(ViewModel, vm => vm.StringList, v => v.LstStrings.ItemsSource)
+            this.OneWayBind(ViewModel, vm => vm.StringList, v => v.LstStrings.ItemsSource)
 				.DisposeWith(disposable);
 
 			this.BindCommand(ViewModel, vm => vm.GenerateStringsCommand, v => v.BtnGenerate)

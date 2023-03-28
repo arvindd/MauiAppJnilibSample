@@ -6,9 +6,9 @@ package org.mauiappjnilibsample;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class RandomStringTest {
+class RandomDataTest {
     @Test void generateReturnsNewStringEverytime() {
-        RandomString classUnderTest = new RandomString();
+        RandomData classUnderTest = new RandomData();
         String s1 = classUnderTest.generate();
         String s2 = classUnderTest.generate();
         

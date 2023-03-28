@@ -13,6 +13,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Location = MauiAppJnilibSample.Platforms.Android.Models.Location;
 
 namespace MauiAppJnilibSample.ViewModels;
 
@@ -22,12 +23,12 @@ public class MainPageViewModel : BaseViewModel
     {
         // Get all services from the configuration
         RandomStringService = AppConfig.RandomString;
-        StringSequenceGeneratorService = AppConfig.StringSequenceGenerator;
+        LocationGeneratorService = AppConfig.LocationGenerator;
 
         // Now, connect all commands to their respective functions in the services
         GenerateStringsCommand = ReactiveCommand.CreateFromObservable(RandomStringService.GenerateStrings);
-        StartStreamCommand = ReactiveCommand.CreateFromObservable(StringSequenceGeneratorService.StartStreamingStrings);
-        StopStreamCommand = ReactiveCommand.Create(StringSequenceGeneratorService.StopStreaming);
+        StartStreamCommand = ReactiveCommand.CreateFromObservable(LocationGeneratorService.StartStreamingLocations);
+        StopStreamCommand = ReactiveCommand.Create(LocationGeneratorService.StopStreaming);
 
         // Note the SubscribeOn() and ObserveOn() used here:
         // SubscribeOn() makes the whole of the execution to run in a specific thread (so that the actual Subscribe()
@@ -42,6 +43,7 @@ public class MainPageViewModel : BaseViewModel
         StartStreamCommand                              // <-- Running on a TaskpoolScheduler
             .SubscribeOn(RxApp.TaskpoolScheduler)       // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.TaskpoolScheduler)         // <-- Running on a TaskpoolScheduler 
+            .Transform(x => $"({x.Latitude},{x.Longitude})") // <-- Running on a TaskpoolScheduler
             .DisposeMany()                              // <-- Running on a TaskpoolScheduler
             .ObserveOn(RxApp.MainThreadScheduler)       // <-- Running on a TaskpoolScheduler
             .Bind(out _stringList)                      // <-- Running on the main (GUI) thread
@@ -71,9 +73,9 @@ public class MainPageViewModel : BaseViewModel
     public ReadOnlyObservableCollection<string> StringList => _stringList;
 
     private RandomStringService RandomStringService { get; }
-    private StringSequenceGeneratorService StringSequenceGeneratorService { get; }
+    private LocationGeneratorService LocationGeneratorService { get; }
 
     public ReactiveCommand<Unit, IChangeSet<string>> GenerateStringsCommand { get; }
-    public ReactiveCommand<Unit, IChangeSet<string>> StartStreamCommand { get; }
+    public ReactiveCommand<Unit, IChangeSet<Location>> StartStreamCommand { get; }
     public ReactiveCommand<Unit, Unit> StopStreamCommand { get; }
 }

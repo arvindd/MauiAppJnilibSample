@@ -7,11 +7,12 @@ package org.mauiappjnilibsample;
 /**
  * Callback interface to be implemented by string sequence listeners.
  */
-public interface StringSequenceListener {
+public interface LocationListener {
     /**
-     * Callback function called by the underlying library whenever a new string 
-     * in the sequence is generated.
-     * @param str 
+     * Callback function called by the underlying library whenever a new location 
+     * is generated.
+     * 
+     * @param loc Generated location 
      */
-    void onString(String str);    
+    void onLocation(Location loc);    
 }

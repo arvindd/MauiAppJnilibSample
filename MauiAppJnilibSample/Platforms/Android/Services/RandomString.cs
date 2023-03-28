@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JNIRandomString = Org.Mauiappjnilibsample.RandomString;
+using JNIRandomData = Org.Mauiappjnilibsample.RandomData;
 
 namespace MauiAppJnilibSample.Platforms.Android.Services
 {
     internal class RandomString
     {
-        private JNIRandomString str = new JNIRandomString();
+        private JNIRandomData data = new JNIRandomData();
         public string Generate()
         {
-            return str.Generate();
+            return data.RandomString;
         }
     }
 }

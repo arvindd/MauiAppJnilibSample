@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JNIStringSequenceListener = Org.Mauiappjnilibsample.IStringSequenceListener;
+using JNILocationListener = Org.Mauiappjnilibsample.ILocationListener;
+using JNILocation = Org.Mauiappjnilibsample.Location;
+
 
 namespace MauiAppJnilibSample.Platforms.Android.Services
 {
@@ -15,8 +17,8 @@ namespace MauiAppJnilibSample.Platforms.Android.Services
     /// is meant to be a direct conduit to the JNI interface.
     /// </para>
     /// </summary>
-    internal abstract class IStringSequenceListener : Java.Lang.Object, JNIStringSequenceListener
+    internal abstract class ILocationListener : Java.Lang.Object, JNILocationListener
     {
-        public abstract void OnString(string str);
+        public abstract void OnLocation(JNILocation loc);
     }
 }
